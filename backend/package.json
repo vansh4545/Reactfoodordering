@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    
     "start": "nodemon index.js"
+    
   },
-  "author": "Ayush Nighoskar",
+  "author": "Vansh gupta",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
