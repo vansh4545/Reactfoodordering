@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
 import { useNavigate, Link } from 'react-router-dom'
 export default function Login() {
-  const [credentials, setCredentials] = useState({ email: "", password: "" })
+  const [credentials, setCredentials] = useState({ email: "guest@gmail.com", password: "123456" })
   let navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -40,6 +40,7 @@ export default function Login() {
       <div>
         <Navbar />
       </div>
+      
       <div className='container'>
         <form className='w-50 m-auto mt-5 border bg-dark border-success rounded' onSubmit={handleSubmit}>
           <div className="m-3">
