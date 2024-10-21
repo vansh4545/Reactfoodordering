@@ -14,11 +14,12 @@ import Login from './screens/Login';
 import Signup from './screens/Signup';
 import { CartProvider } from './components/ContextReducer';
 import MyOrder from './screens/MyOrder';
-
+import { Provider } from 'react-redux';
+import {store} from './redux/store';
 
 function App() {
   return (
-    <CartProvider>
+    <Provider store={store}>
       <Router>
         <div>
           <Routes>
@@ -29,7 +30,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </CartProvider>
+    </Provider>
   );
 }
 

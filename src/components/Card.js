@@ -1,24 +1,20 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatchCart, useCart } from './ContextReducer'
-// import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem, updateItem } from '../redux/slices/cartSlice';
+
 export default function Card(props) {
-  let data = useCart();
+  const data = useSelector((state) => state.cart);
 
   let navigate = useNavigate()
   const [qty, setQty] = useState(1)
   const [size, setSize] = useState("")
   const priceRef = useRef();
-  // const [btnEnable, setBtnEnable] = useState(false);
-  // let totval = 0
-  // let price = Object.values(options).map((value) => {
-  //   return parseInt(value, 10);
-  // });
   let options = props.options;
   let priceOptions = Object.keys(options);
   let foodItem = props.item;
-  const dispatch = useDispatchCart();
+  const dispatch = useDispatch();
   const handleClick = () => {
     if (!localStorage.getItem("token")) {
       navigate("/login")
@@ -31,35 +27,27 @@ export default function Card(props) {
     setSize(e.target.value);
   }
   const handleAddToCart = async () => {
-    let food = []
-    for (const item of data) {
-      if (item.id === foodItem._id) {
-        food = item;
+    let food = data.find(item => item.id === foodItem._id && item.size === size);
 
-        break;
-      }
+    if (food) {
+      // If item already exists in cart with the same size, update it
+      dispatch(updateItem({
+        id: foodItem._id,
+        qty: qty,
+        price: finalPrice,
+      }));
+    } else {
+      // If item doesn't exist, add a new one to the cart
+      dispatch(addItem({
+        id: foodItem._id,
+        name: foodItem.name,
+        qty: qty,
+        size: size,
+        price: finalPrice,
+        img: props.ImgSrc,
+      }));
     }
-    console.log(food)
-    console.log(new Date())
-    if (food.size>0) {
-      if (food.size === size) {
-        await dispatch({ type: "UPDATE", id: foodItem._id, price: finalPrice, qty: qty })
-        return
-      }
-      else if (food.size !== size) {
-        await dispatch({ type: "ADD", id: foodItem._id, name: foodItem.name, price: finalPrice, qty: qty, size: size,img: props.ImgSrc })
-        console.log("Size different so simply ADD one more to the list")
-        return
-      }
-      return
-    }
-
-    await dispatch({ type: "ADD", id: foodItem._id, name: foodItem.name, price: finalPrice, qty: qty, size: size })
-
-
-    // setBtnEnable(true)
-
-  }
+  };
 
   useEffect(() => {
     setSize(priceRef.current.value)

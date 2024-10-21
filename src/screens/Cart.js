@@ -1,9 +1,13 @@
 import React from 'react'
 import Delete from '@mui/icons-material/Delete'
-import { useCart, useDispatchCart } from '../components/ContextReducer';
+//import { useCart, useDispatchCart } from '../components/ContextReducer';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeItem, dropCart } from '../redux/slices/cartSlice';
 export default function Cart() {
-  let data = useCart();
-  let dispatch = useDispatchCart();
+  // let data = useCart();
+  // let dispatch = useDispatchCart();
+  const data = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
   if (data.length === 0) {
     return (
       <div>
@@ -11,17 +15,11 @@ export default function Cart() {
       </div>
     )
   }
-  // const handleRemove = (index)=>{
-  //   console.log(index)
-  //   dispatch({type:"REMOVE",index:index})
-  // }
-
+  
   const handleCheckOut = async () => {
     let userEmail = localStorage.getItem("userEmail");
-    // console.log(data,localStorage.getItem("userEmail"),new Date())
+    
     let response = await fetch("https://reactfoodordering.onrender.com/api/auth/orderData", {
-      // credentials: 'include',
-      // Origin:"http://localhost:3000/login",
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -34,7 +32,7 @@ export default function Cart() {
     });
     console.log("JSON RESPONSE:::::", response.status)
     if (response.status === 200) {
-      dispatch({ type: "DROP" })
+      dispatch(dropCart())
     }
   }
 
@@ -63,7 +61,7 @@ export default function Cart() {
                 <td>{food.qty}</td>
                 <td>{food.size}</td>
                 <td>{food.price}</td>
-                <td ><button type="button" className="btn p-0"><Delete onClick={() => { dispatch({ type: "REMOVE", index: index }) }} /></button> </td></tr>
+                <td ><button type="button" className="btn p-0"><Delete onClick={() => { dispatch(removeItem({index})) }} /></button> </td></tr>
             ))}
           </tbody>
         </table>

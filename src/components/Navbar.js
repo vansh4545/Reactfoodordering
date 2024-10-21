@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
- import Badge from "@mui/icons-material/Badge";
- import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useCart } from './ContextReducer';
+import Badge from "@mui/icons-material/Badge"
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useSelector } from 'react-redux';
 import Modal from '../Modal';
 import Cart from '../screens/Cart';
 export default function Navbar(props) {
@@ -22,7 +22,8 @@ export default function Navbar(props) {
         setCartView(true)
     }
 
-    const items = useCart();
+    const items = useSelector((state) => state.cart)
+    
     return (
         <div style ={{color:'#303030'}}>
             <nav className="navbar navbar-expand-lg navbar-dark bg-success position-sticky"
@@ -48,14 +49,36 @@ export default function Navbar(props) {
                                 <Link className="btn bg-white text-success mx-1" to="/signup">Signup</Link>
                             </form> :
                             <div>
-
-                                <div className="btn bg-white text-success mx-2 " onClick={loadCart}>
+                                
+                                {/* <div className="btn bg-white text-success mx-2 " onClick={loadCart}>
+                               
                                     <Badge color="secondary" badgeContent={items.length} >
                                         <ShoppingCartIcon />
                                     </Badge>
                                     Cart
-                                </div>
+                                </div> */}
+                                <div className="btn bg-white text-success mx-2" onClick={loadCart} style={{ position: "relative" }}>
+  <ShoppingCartIcon />
+  {items.length > 0 && (
+    <span
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        backgroundColor: "red",
+        color: "white",
+        borderRadius: "50%",
+        padding: "2px 6px",
+        fontSize: "12px",
+      }}
+    >
+      {items.length}
+    </span>
+  )}
+  Cart
+</div>
 
+                                
                                 {cartView ? <Modal onClose={() => setCartView(false)}><Cart></Cart></Modal> : ""}
 
                                 <button onClick={handleLogout} className="btn bg-white text-success" >Logout</button></div>}
